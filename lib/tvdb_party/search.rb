@@ -13,7 +13,7 @@ module TvdbParty
     end
 
     def search(series_name)
-      response = self.class.get("/GetSeries.php", {:query => {:seriesname => series_name, :language => @language}}).parsed_response
+      response = self.class.get("/GetSeries.php", {:query => {:seriesname => series_name, :language => @language}})
       return [] unless response["Data"]
 
       case response["Data"]["Series"]
@@ -27,7 +27,7 @@ module TvdbParty
     end
 
     def get_series_by_id(series_id, language = self.language)
-      response = self.class.get("/#{@api_key}/series/#{series_id}/#{language}.xml").parsed_response
+      response = self.class.get("/#{@api_key}/series/#{series_id}/#{language}.xml")
 
       if response["Data"] && response["Data"]["Series"]
         Series.new(self, response["Data"]["Series"])
@@ -37,7 +37,7 @@ module TvdbParty
     end
 
     def get_episode_by_id(episode_id, language = self.language)
-      response = self.class.get("/#{@api_key}/episodes/#{episode_id}/#{language}.xml").parsed_response
+      response = self.class.get("/#{@api_key}/episodes/#{episode_id}/#{language}.xml")
       if response["Data"] && response["Data"]["Episode"]
         Episode.new(self, response["Data"]["Episode"])
       else
@@ -46,7 +46,7 @@ module TvdbParty
     end
 
     def get_episode(series, season_number, episode_number, language = self.language)
-      response = self.class.get("/#{@api_key}/series/#{series.id}/default/#{season_number}/#{episode_number}/#{language}.xml").parsed_response
+      response = self.class.get("/#{@api_key}/series/#{series.id}/default/#{season_number}/#{episode_number}/#{language}.xml")
       if response["Data"] && response["Data"]["Episode"]
         Episode.new(self, response["Data"]["Episode"])
       else
@@ -55,7 +55,7 @@ module TvdbParty
     end
 
     def get_all_episodes(series, language = self.language)
-      response = self.class.get("/#{@api_key}/series/#{series.id}/all/#{language}.xml").parsed_response
+      response = self.class.get("/#{@api_key}/series/#{series.id}/all/#{language}.xml")
       return [] unless response["Data"] && response["Data"]["Episode"]
       case response["Data"]["Episode"]
       when Array
@@ -68,7 +68,7 @@ module TvdbParty
     end
 
     def get_actors(series)
-      response = self.class.get("/#{@api_key}/series/#{series.id}/actors.xml").parsed_response
+      response = self.class.get("/#{@api_key}/series/#{series.id}/actors.xml")
       if response["Actors"] && response["Actors"]["Actor"]
         response["Actors"]["Actor"].collect {|a| Actor.new(a)}
       else
@@ -77,7 +77,7 @@ module TvdbParty
     end
 
     def get_banners(series)
-      response = self.class.get("/#{@api_key}/series/#{series.id}/banners.xml").parsed_response
+      response = self.class.get("/#{@api_key}/series/#{series.id}/banners.xml")
       return [] unless response["Banners"] && response["Banners"]["Banner"]
       case response["Banners"]["Banner"]
       when Array

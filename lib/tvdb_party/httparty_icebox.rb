@@ -207,11 +207,12 @@ module HTTParty #:nodoc:
         end
         def set(key, value)
           Cache.logger.info("Cache: set (#{key})")
-          File.open( @path.join(key), 'w' ) { |file| Marshal.dump(value, file) }
+          File.open( @path.join(key), 'w' ) { |file| Marshal.dump(value.parsed_response, file) }
           true
         end
         def get(key)
-          data = Marshal.load(File.new(@path.join(key)))
+          file = File.new(@path.join(key))
+          data = !file.eof? ? Marshal.load(file) : nil 
           Cache.logger.info("Cache: #{data.nil? ? "miss" : "hit"} (#{key})")
           data
         end
